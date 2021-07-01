@@ -17,70 +17,28 @@ const toyRobot = async () => {
   // PLACE correct format
   if (splitInputInitialPlace[0] === 'PLACE') {
         
-    let coordsFacing = splitStringByCommas(splitInputInitialPlace[1])
-    let coordsX = coordsFacing[0]
-    let coordsY = coordsFacing[1]
-    let facing = coordsFacing[2]
+    let splitInputPlaceCorrect = splitStringByCommas(splitInputInitialPlace[1])
+    let coordsFacing = createCoordsFacingObject(splitInputPlaceCorrect)
 
-    while (!fallOffBoardCheck(coordsX, coordsY)) {
-
-      let inputPlaceCorrectCoords = await fallOffTablePrompt()
-
-      // exit program
-      if (exitProgramCheck(inputPlaceCorrectCoords)) return
-
-      let splitInputPlaceCorrectCoords = splitStringBySpace(inputPlaceCorrectCoords)
-      if (splitInputPlaceCorrectCoords[0] === 'PLACE') {
-            
-        coordsFacing = splitStringByCommas(splitInputPlaceCorrectCoords[1])
-        coordsX = coordsFacing[0]
-        coordsY = coordsFacing[1]
-        facing = coordsFacing[2]
-      }
-    }
+    repeatFallOffTablePrompt(coordsFacing)
       
   // PLACE incorrect format
   } else {
-    let splitInput2 = splitInputInitialPlace
 
-    while (splitInput2[0] !== 'PLACE') {
+    let splitInput2 = await repeatIncorrectPlacePrompt(splitInputInitialPlace)
 
-      let inputIncorrectPlacePrompt = await incorrectPlacePrompt()
+    let splitInputIncorrectPlacePrompt = splitStringByCommas(splitInput2[1])
+    let coordsFacing2 = createCoordsFacingObject(splitInputIncorrectPlacePrompt)
 
-      // exit program
-      if (exitProgramCheck(inputIncorrectPlacePrompt)) return
-
-      splitInput2 = splitStringBySpace(inputIncorrectPlacePrompt)
-    }
-
-    // move onto coordinates check
-    let coordsFacing2 = splitStringByCommas(splitInput2[1])
-    let coordsX2 = coordsFacing2[0]
-    let coordsY2 = coordsFacing2[1]
-    let facing2 = coordsFacing2[2]
-
-    while (!fallOffBoardCheck(coordsX2, coordsY2)) {
-
-      let inputPlaceIncorrectCoords = await fallOffTablePrompt()
-
-      // exit program
-      if (exitProgramCheck(inputPlaceIncorrectCoords)) return
-
-      splitInput = splitStringBySpace(inputPlaceIncorrectCoords)
-      if (splitInput[0] === 'PLACE') {
-        coordsFacing2 = splitInput[1].split(',')
-        coordsX2 = coordsFacing2[0]
-        coordsY2 = coordsFacing2[1]
-        facing2 = coordsFacing2[2]
-      }
-    }
+    repeatFallOffTablePrompt(coordsFacing2)
+    
   }
 }
 
 // checks if coordinates are within (0,0) and (5,5)
-const fallOffBoardCheck = (coordsX, coordsY) => {
-  if (-1 < coordsX && coordsX < 6) {
-    if (-1 < coordsY && coordsY < 6) {
+const fallOffBoardCheck = (coordsFacing) => {
+  if (-1 < coordsFacing.coordsX && coordsFacing.coordsX < 6) {
+    if (-1 < coordsFacing.coordsY && coordsFacing.coordsY < 6) {
       return true
     }
   } else {
@@ -89,6 +47,7 @@ const fallOffBoardCheck = (coordsX, coordsY) => {
 }
 
 // exit program check
+// ** need to re-do this **
 const exitProgramCheck = (userInput) => {
   if (userInput === 'X') 
   return true
@@ -111,6 +70,39 @@ const createCoordsFacingObject = (splitInput) => {
   coordsFacing.facing = splitInput[2]
 
   return coordsFacing
+}
+
+const repeatFallOffTablePrompt = async (coordsFacing) => {
+
+  while (!fallOffBoardCheck(coordsFacing)) {
+
+    let input = await fallOffTablePrompt()
+
+    // exit program
+    if (exitProgramCheck(input)) return
+
+    let splitInputSpace = splitStringBySpace(input)
+    if (splitInputSpace[0] === 'PLACE') {
+            
+      let splitInputCommas = splitStringByCommas(splitInputSpace[1])
+      coordsFacing = createCoordsFacingObject(splitInputCommas)
+    }
+  }
+}
+
+const repeatIncorrectPlacePrompt = async (splitInput) => {
+
+  while (splitInput[0] !== 'PLACE') {
+
+    let input = await incorrectPlacePrompt()
+
+    // exit program
+    if (exitProgramCheck(input)) return
+
+    splitInput = splitStringBySpace(input)
+  }
+
+  return splitInput
 }
 
 toyRobot()
