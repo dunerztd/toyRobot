@@ -1,5 +1,13 @@
 var prompt = require('prompt');
 
+const { 
+  fallOffBoardCheck,
+  exitProgramCheck,
+  splitStringByCommas,
+  splitStringBySpace,
+  createCoordsFacingObject
+} = require('./misc')
+
 const initialPlacePrompt = async () => {
   
   prompt.start();
@@ -33,8 +41,57 @@ const fallOffTablePrompt = async () => {
   return input
 }
 
+const repeatFallOffTablePrompt = async (coordsFacing) => {
+
+  while (!fallOffBoardCheck(coordsFacing)) {
+
+    let input = await fallOffTablePrompt()
+
+    // exit program
+    if (exitProgramCheck(input)) return
+
+    let splitInputSpace = splitStringBySpace(input)
+    if (splitInputSpace[0] === 'PLACE') {
+            
+      let splitInputCommas = splitStringByCommas(splitInputSpace[1])
+      coordsFacing = createCoordsFacingObject(splitInputCommas)
+    }
+  }
+}
+
+const repeatIncorrectPlacePrompt = async (splitInput) => {
+
+  while (splitInput[0] !== 'PLACE') {
+
+    let input = await incorrectPlacePrompt()
+
+    // exit program
+    if (exitProgramCheck(input)) return
+
+    splitInput = splitStringBySpace(input)
+  }
+
+  return splitInput
+}
+
+const onTablePrompt = async () => {
+  
+  prompt.start();
+
+  // first user input
+  const { input } = await prompt.get({
+    description: ">>",
+    name: 'input'
+  })
+
+  return input
+}
+
 module.exports = {
   initialPlacePrompt,
   incorrectPlacePrompt,
-  fallOffTablePrompt
+  fallOffTablePrompt,
+  repeatFallOffTablePrompt,
+  repeatIncorrectPlacePrompt,
+  onTablePrompt
 }
