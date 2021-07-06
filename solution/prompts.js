@@ -42,6 +42,7 @@ const fallOffTablePrompt = async () => {
 }
 
 const repeatFallOffTablePrompt = async (coordsFacing) => {
+  
 
   while (!fallOffBoardCheck(coordsFacing)) {
 
@@ -51,17 +52,19 @@ const repeatFallOffTablePrompt = async (coordsFacing) => {
     if (exitProgramCheck(input)) return
 
     let splitInputSpace = splitStringBySpace(input)
-    if (splitInputSpace[0] === 'PLACE') {
+    if (splitInputSpace[0] === 'PLACE' && splitInputSpace[1] !== undefined) {
             
       let splitInputCommas = splitStringByCommas(splitInputSpace[1])
       coordsFacing = createCoordsFacingObject(splitInputCommas)
     }
   }
+
+  return coordsFacing
 }
 
 const repeatIncorrectPlacePrompt = async (splitInput) => {
 
-  while (splitInput[0] !== 'PLACE') {
+  while (splitInput[0] !== 'PLACE' || splitInput[1] === undefined) {
 
     let input = await incorrectPlacePrompt()
 

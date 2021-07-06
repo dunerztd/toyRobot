@@ -25,27 +25,30 @@ const toyRobot = async () => {
   let splitInputInitialPlace = splitStringBySpace(inputInitialPlace)
       
   // PLACE correct format
-  if (splitInputInitialPlace[0] === 'PLACE') {
+  if (splitInputInitialPlace[0] === 'PLACE' && splitInputInitialPlace[1] !== undefined) {
 
     let coordsFacing = await extractCoordsFacingFromPlaceCommand(splitInputInitialPlace[1])
-    let onTableInput = await onTablePrompt()
-
-    mainMenu(onTableInput, coordsFacing)
+    
 
   } else { // PLACE incorrect format
 
     let splitInput2 = await repeatIncorrectPlacePrompt(splitInputInitialPlace)
-    let coordsFacing = extractCoordsFacingFromPlaceCommand(splitInput2[1])
-  }
-}
 
+    let coordsFacing = await extractCoordsFacingFromPlaceCommand(splitInput2[1])
+
+  }
+
+  let onTableInput = await onTablePrompt()
+  let onTableInputSplitBySpace = splitStringBySpace(onTableInput)
+  main(onTableInputSplitBySpace[0], coordsFacing)
+}
 
 const extractCoordsFacingFromPlaceCommand = async (splitInputSpace) => {
   let splitInputCommas = splitStringByCommas(splitInputSpace)
   let coordsFacing = createCoordsFacingObject(splitInputCommas)
-  repeatFallOffTablePrompt(coordsFacing)
+  let coordsFacingUpdate = await repeatFallOffTablePrompt(coordsFacing)
 
-  return coordsFacing
+  return coordsFacingUpdate
 }
 
 const move = (coordsFacing) => {
@@ -68,60 +71,67 @@ const move = (coordsFacing) => {
       break;
   }
 
-  if (fallOffBoardCheck(coordsFacing)) {
+  if (fallOffBoardCheck(coordsFacingMove)) {
     return coordsFacingMove
   } else {
+    console.log('Toy will fall off table. Move ignored');
     return coordsFacingOrig
   }
 }
 
 const left = (coordsFacing) => {
+
+  let coordsFacingLeft = {...coordsFacing}
+
   switch(coordsFacing.facing) {
     case 'NORTH':
-      coordsFacing.facing = 'WEST'
+      coordsFacingLeft.facing = 'WEST'
       break;
     case 'EAST':
-      coordsFacing.facing = 'NORTH'
+      coordsFacingLeft.facing = 'NORTH'
       break;
     case 'SOUTH':
-      coordsFacing.facing = 'EAST'
+      coordsFacingLeft.facing = 'EAST'
       break;
     case 'WEST':
-      coordsFacing.facing = 'SOUTH'
+      coordsFacingLeft.facing = 'SOUTH'
       break;
   }
 
-  return coordsFacing
+  return coordsFacingLeft
 }
 
 const right = (coordsFacing) => {
+
+  let coordsFacingRight = {...coordsFacing}
+
   switch(coordsFacing.facing) {
     case 'NORTH':
-      coordsFacing.facing = 'EAST'
+      coordsFacingRight.facing = 'EAST'
       break;
     case 'EAST':
-      coordsFacing.facing = 'SOUTH'
+      coordsFacingRight.facing = 'SOUTH'
       break;
     case 'SOUTH':
-      coordsFacing.facing = 'WEST'
+      coordsFacingRight.facing = 'WEST'
       break;
     case 'WEST':
-      coordsFacing.facing = 'NORTH'
+      coordsFacingRight.facing = 'NORTH'
       break;
   }
 
-  return coordsFacing
+  return coordsFacingRight
 }
 
 const report = (coordsFacing) => {
-  console.log(`x: ${coordsFacing.coordsX}, y: ${coordsFacing.coordsY} f: ${coordsFacing.facing}`)
+  console.log(`x: ${coordsFacing.coordsX}, y: ${coordsFacing.coordsY}, f: ${coordsFacing.facing}`)
 }
 
-const mainMenu = async (onTableInput, coordsFacing) => {
+const main = async (onTableInputSBS, coordsFacing) => {
 
-  while (onTableInput !== 'X') {
+  while (onTableInputSBS !== 'X') {
 
-    switch(onTableInput) {
+    switch(onTableInputSBS) {
       case 'MOVE':
         coordsFacing = move(coordsFacing)
         break;
@@ -134,15 +144,17 @@ const mainMenu = async (onTableInput, coordsFacing) => {
       case 'REPORT':
         report(coordsFacing)
         break;
+      case 'PLACE':
+        coordsFacing = await extractCoordsFacingFromPlaceCommand(onTableInputSBS)
+        break;
       case 'X':
         return
       default:
         console.log('Command not recognised');
     }
 
-    console.log(coordsFacing);
-
-    onTableInput = await onTablePrompt()
+    let mainInput = await onTablePrompt()
+    onTableInputSBS = splitStringBySpace(mainInput)[0]
   }
 }
 
