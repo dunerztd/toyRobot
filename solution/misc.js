@@ -35,10 +35,18 @@ const createCoordsFacingObject = (splitInput) => {
   return coordsFacing
 }
 
+const extractCoordsFacingFromPlaceCommand = async (splitInputSpace) => {
+  let splitInputCommas = splitStringByCommas(splitInputSpace)
+  let coordsFacing = createCoordsFacingObject(splitInputCommas)
+  
+  return coordsFacing
+}
+
 module.exports = {
   fallOffBoardCheck,
   exitProgramCheck,
   splitStringByCommas,
   splitStringBySpace,
-  createCoordsFacingObject
+  createCoordsFacingObject,
+  extractCoordsFacingFromPlaceCommand
 }

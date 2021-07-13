@@ -41,42 +41,6 @@ const fallOffTablePrompt = async () => {
   return input
 }
 
-const repeatFallOffTablePrompt = async (coordsFacing) => {
-  
-
-  while (!fallOffBoardCheck(coordsFacing)) {
-
-    let input = await fallOffTablePrompt()
-
-    // exit program
-    if (exitProgramCheck(input)) return
-
-    let splitInputSpace = splitStringBySpace(input)
-    if (splitInputSpace[0] === 'PLACE' && splitInputSpace[1] !== undefined) {
-            
-      let splitInputCommas = splitStringByCommas(splitInputSpace[1])
-      coordsFacing = createCoordsFacingObject(splitInputCommas)
-    }
-  }
-
-  return coordsFacing
-}
-
-const repeatIncorrectPlacePrompt = async (splitInput) => {
-
-  while (splitInput[0] !== 'PLACE' || splitInput[1] === undefined) {
-
-    let input = await incorrectPlacePrompt()
-
-    // exit program
-    if (exitProgramCheck(input)) return
-
-    splitInput = splitStringBySpace(input)
-  }
-
-  return splitInput
-}
-
 const onTablePrompt = async () => {
   
   prompt.start();
@@ -94,7 +58,5 @@ module.exports = {
   initialPlacePrompt,
   incorrectPlacePrompt,
   fallOffTablePrompt,
-  repeatFallOffTablePrompt,
-  repeatIncorrectPlacePrompt,
   onTablePrompt
 }
