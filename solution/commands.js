@@ -1,11 +1,11 @@
 const {
-  fallOffBoardCheck,
+  onTableCheck,
   extractCoordsFacingFromPlaceCommand
 } = require('./misc')
 
 const move = (coordsFacing) => {
 
-  let coordsFacingOrig = {...coordsFacing}
+  const coordsFacingOrig = {...coordsFacing}
   let coordsFacingMove = {...coordsFacing}
 
   switch(coordsFacing.facing) {
@@ -23,7 +23,7 @@ const move = (coordsFacing) => {
       break;
   }
 
-  if (fallOffBoardCheck(coordsFacingMove)) {
+  if (onTableCheck(coordsFacingMove)) {
     return coordsFacingMove
   } else {
     console.log('Toy will fall off table. Move ignored');
@@ -81,18 +81,19 @@ const report = (coordsFacing) => {
 
 const place = async (onTableInputSBS, coordsFacing) => {
 
-  if (onTableInputSBS[1] !== undefined) {
-    let coordsFacingNew = await extractCoordsFacingFromPlaceCommand(onTableInputSBS[1])
-    if (fallOffBoardCheck(coordsFacingNew)) {
-      return coordsFacingNew
-    } else {
-      console.log('Toy Robot will fall off table. Make sure coordinates within (0,0) and (5,5)');
-      return coordsFacing
-    }
-  } else {
+  if (onTableInputSBS[1] === undefined) {
     console.log('Incorrect PLACE format');
     return coordsFacing
   }
+
+  const coordsFacingNew = await extractCoordsFacingFromPlaceCommand(onTableInputSBS[1])
+
+  if (!onTableCheck(coordsFacingNew)) {
+    console.log('Toy Robot will fall off table. Make sure coordinates within (0,0) and (5,5)');
+    return coordsFacing
+  }
+
+  return coordsFacingNew
 }
 
 module.exports = {

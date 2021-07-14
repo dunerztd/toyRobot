@@ -6,7 +6,7 @@ const {
 } = require('./prompts')
 
 const {
-  fallOffBoardCheck,
+  onTableCheck,
   exitProgramCheck,
   splitStringBySpace,
   extractCoordsFacingFromPlaceCommand
@@ -22,7 +22,7 @@ const {
 
 const toyRobot = async () => {
 
-  let inputInitialPlace = await initialPlacePrompt()
+  const inputInitialPlace = await initialPlacePrompt()
   let splitInputInitialPlace = splitStringBySpace(inputInitialPlace)
 
   // exit program
@@ -31,12 +31,13 @@ const toyRobot = async () => {
   let coordsFacing = {}
       
   // PLACE correct format
-  while (!fallOffBoardCheck(coordsFacing)) {
+  while (!onTableCheck(coordsFacing)) {
+    
     if (splitInputInitialPlace[0] === 'PLACE' && splitInputInitialPlace[1] !== undefined) {
 
       coordsFacing = await extractCoordsFacingFromPlaceCommand(splitInputInitialPlace[1])
 
-      if (!fallOffBoardCheck(coordsFacing)) {
+      if (!onTableCheck(coordsFacing)) {
 
         let input = await fallOffTablePrompt()
         let loopSplitBySpace = splitStringBySpace(input)
@@ -61,8 +62,8 @@ const toyRobot = async () => {
     }
   }
 
-  let onTableInput = await onTablePrompt()
-  let onTableInputSplitBySpace = splitStringBySpace(onTableInput)
+  const onTableInput = await onTablePrompt()
+  const onTableInputSplitBySpace = splitStringBySpace(onTableInput)
   main(onTableInputSplitBySpace, coordsFacing)
 }
 

@@ -1,13 +1,5 @@
 var prompt = require('prompt');
 
-const { 
-  fallOffBoardCheck,
-  exitProgramCheck,
-  splitStringByCommas,
-  splitStringBySpace,
-  createCoordsFacingObject
-} = require('./misc')
-
 const initialPlacePrompt = async () => {
   
   prompt.start();

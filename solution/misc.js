@@ -1,5 +1,5 @@
 // checks if coordinates are within (0,0) and (5,5)
-const fallOffBoardCheck = (coordsFacing) => {
+const onTableCheck = (coordsFacing) => {
   if (-1 < coordsFacing.coordsX && coordsFacing.coordsX < 6) {
     if (-1 < coordsFacing.coordsY && coordsFacing.coordsY < 6) {
       return true
@@ -17,17 +17,17 @@ const exitProgramCheck = (userInput) => {
 }
 
 const splitStringByCommas = (string) => {
-  let splitString = string.split(',')
+  const splitString = string.split(',')
   return splitString
 }
 
 const splitStringBySpace = (string) => {
-  let splitString = string.split(' ')
+  const splitString = string.split(' ')
   return splitString
 }
 
 const createCoordsFacingObject = (splitInput) => {
-  let coordsFacing = {}
+  const coordsFacing = {}
   coordsFacing.coordsX = parseInt(splitInput[0])
   coordsFacing.coordsY = parseInt(splitInput[1])
   coordsFacing.facing = splitInput[2]
@@ -36,14 +36,14 @@ const createCoordsFacingObject = (splitInput) => {
 }
 
 const extractCoordsFacingFromPlaceCommand = async (splitInputSpace) => {
-  let splitInputCommas = splitStringByCommas(splitInputSpace)
-  let coordsFacing = createCoordsFacingObject(splitInputCommas)
+  const splitInputCommas = splitStringByCommas(splitInputSpace)
+  const coordsFacing = createCoordsFacingObject(splitInputCommas)
   
   return coordsFacing
 }
 
 module.exports = {
-  fallOffBoardCheck,
+  onTableCheck,
   exitProgramCheck,
   splitStringByCommas,
   splitStringBySpace,
