@@ -25,40 +25,30 @@ const toyRobot = async () => {
   const inputInitialPlace = await initialPlacePrompt()
   let splitInputInitialPlace = splitStringBySpace(inputInitialPlace)
 
-  // exit program
-  if (exitProgramCheck(inputInitialPlace)) return
-
   let coordsFacing = {}
       
-  // PLACE correct format
-  while (!onTableCheck(coordsFacing)) {
-    
+  while (true) {
+
+    // exit program
+    if (exitProgramCheck(splitInputInitialPlace[0])) return
+
+    if (splitInputInitialPlace[0] !== 'PLACE' || splitInputInitialPlace[1] === undefined) {
+      let input2 = await incorrectPlacePrompt()
+      splitInputInitialPlace = splitStringBySpace(input2)
+    }
+
     if (splitInputInitialPlace[0] === 'PLACE' && splitInputInitialPlace[1] !== undefined) {
-
       coordsFacing = await extractCoordsFacingFromPlaceCommand(splitInputInitialPlace[1])
-
-      if (!onTableCheck(coordsFacing)) {
-
-        let input = await fallOffTablePrompt()
-        let loopSplitBySpace = splitStringBySpace(input)
-
-        if (exitProgramCheck(input)) return
-
-        if (loopSplitBySpace[0] === 'PLACE') {
-          coordsFacing = await extractCoordsFacingFromPlaceCommand(loopSplitBySpace[1])
-        } else {
-          let input2 = await incorrectPlacePrompt()
-          splitInputInitialPlace = splitStringBySpace(input2)
-        }
-      }
+    }
       
-    } else { // PLACE incorrect format
+    if (onTableCheck(coordsFacing)) {
+      console.log('Toy Robot on table')
+      break
+    }
 
-      let input3 = await incorrectPlacePrompt()
-      splitInputInitialPlace = splitStringBySpace(input3)
-
-      if (exitProgramCheck(input3)) return
-
+    if (splitInputInitialPlace[0] === 'PLACE' && splitInputInitialPlace[1] !== undefined) {
+      let input = await fallOffTablePrompt()
+      splitInputInitialPlace = splitStringBySpace(input)
     }
   }
 
