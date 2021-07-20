@@ -10,7 +10,6 @@ const onTableCheck = (coordsFacing) => {
 }
 
 // exit program check
-// ** need to re-do this **
 const exitProgramCheck = (userInput) => {
   if (userInput === 'X') 
   return true
@@ -35,6 +34,7 @@ const createCoordsFacingObject = (splitInput) => {
   return coordsFacing
 }
 
+// only used once a PLACE command has been entered correctly
 const extractCoordsFacingFromPlaceCommand = async (splitInputSpace) => {
   const splitInputCommas = splitStringByCommas(splitInputSpace)
   const coordsFacing = createCoordsFacingObject(splitInputCommas)

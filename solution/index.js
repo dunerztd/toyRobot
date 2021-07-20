@@ -88,4 +88,4 @@ const main = async (onTableInputSBS, coordsFacing) => {
   }
 }
 
-toyRobot()
+toyRobot().catch((e) => console.log(e))
