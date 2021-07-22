@@ -3,6 +3,8 @@ const onTableCheck = (coordsFacing) => {
   if (-1 < coordsFacing.coordsX && coordsFacing.coordsX < 6) {
     if (-1 < coordsFacing.coordsY && coordsFacing.coordsY < 6) {
       return true
+    } else {
+      return false
     }
   } else {
     return false
