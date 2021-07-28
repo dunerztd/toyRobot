@@ -89,3 +89,8 @@ const main = async (onTableInputSBS, coordsFacing) => {
 }
 
 toyRobot().catch((e) => console.log(e))
+
+module.exports = {
+  toyRobot,
+  main
+}

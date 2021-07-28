@@ -1,5 +1,6 @@
 var prompt = require('prompt');
 
+// all prompts console.log the description and return the user's input
 const initialPlacePrompt = async () => {
   
   prompt.start();
@@ -37,7 +38,6 @@ const onTablePrompt = async () => {
   
   prompt.start();
 
-  // first user input
   const { input } = await prompt.get({
     description: ">>",
     name: 'input'
