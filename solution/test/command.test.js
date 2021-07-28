@@ -1,3 +1,5 @@
+// npm test -f command -- -t=yap
+
 const {
   move,
   left,
@@ -44,3 +46,44 @@ describe("right function", () => {
   })
 })
 
+describe("place function", () => {
+  test("PLACE command not followed by a space should return coordsFacing unchanged", () => {
+
+    const onTableInputSBS = ['PLACE4,4,NORTH']
+    let coordsFacing = { coordsX: 1, coordsY: 1, facing: 'NORTH'}
+
+    return place(onTableInputSBS, coordsFacing).then(result => {
+      expect(result).toEqual({ coordsX: 1, coordsY: 1, facing: 'NORTH'})
+    })
+  })
+
+  test("PLACE command in the correct format but with coordinates outside (0,0) and (5,5) should return coordsFacing unchanged", async () => {
+
+    const onTableInputSBS = ['PLACE', '7,4,EAST']
+    let coordsFacing = { coordsX: 7, coordsY: 4, facing: 'EAST'}
+
+    const result = await place(onTableInputSBS,coordsFacing)
+
+    expect(result).toEqual({ coordsX: 7, coordsY: 4, facing: 'EAST'})
+  })
+
+  test("PLACE command in the correct format and coordinates inside (0,0) and (5,5) should return coordsFacing updated", async () => {
+
+    const onTableInputSBS = ['PLACE', '3,3,NORTH']
+    let coordsFacing = { coordsX: 1, coordsY: 5, facing: 'EAST'}
+
+    const result = await place(onTableInputSBS,coordsFacing)
+
+    expect(result).toEqual({ coordsX: 3, coordsY: 3, facing: 'NORTH'})
+  })
+
+  test("PLACE command in the correct format but with invalid coordinates and facing input, should return coordsFacing unchanged", async () => {
+
+    const onTableInputSBS = ['PLACE', '55,NHROjf']
+    let coordsFacing = { coordsX: 4, coordsY: 4, facing: 'WEST'}
+
+    const result = await place(onTableInputSBS,coordsFacing)
+
+    expect(result).toEqual({ coordsX: 4, coordsY: 4, facing: 'WEST'})
+  })
+})
