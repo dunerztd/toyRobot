@@ -11,7 +11,7 @@ To run the application:
 A few caveats to operating the program:
 
 - Accepts capitals only
-- Must have a space between PLACE and Co-ordinates. Co-ordinates and Facing only separated by a comma with no spaces ie. PLACE 5,5,NORTH
+- The PLACE command must have a space between PLACE and Co-ordinates. Co-ordinates and Facing only separated by a comma with no spaces ie. PLACE 5,5,NORTH
 
 To run the tests with code coverage:
 
