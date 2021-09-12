@@ -16,3 +16,8 @@ A few caveats to operating the program:
 To run the tests with code coverage:
 
 <code>npm test</code>
+
+node version: v16.9.0
+
+
+All other documentation for using the program are found in PROBLEM.md
