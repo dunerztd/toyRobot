@@ -4,7 +4,6 @@ const {
   move,
   left,
   right,
-  report,
   place
 } = require('../commands')
 
@@ -85,5 +84,15 @@ describe("place function", () => {
     const result = await place(onTableInputSBS,coordsFacing)
 
     expect(result).toEqual({ coordsX: 4, coordsY: 4, facing: 'WEST'})
+  })
+
+  test("PLACE command in the correct format but with invalid coordinates and facing input, should return coordsFacing unchanged", async () => {
+
+    const onTableInputSBS = ['PLACE', 'foo foo bar']
+    let coordsFacing = { coordsX: 1, coordsY: 2, facing: 'SOUTH'}
+
+    const result = await place(onTableInputSBS,coordsFacing)
+
+    expect(result).toEqual({ coordsX: 1, coordsY: 2, facing: 'SOUTH'})
   })
 })

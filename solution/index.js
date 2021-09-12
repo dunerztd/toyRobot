@@ -1,15 +1,11 @@
 const {
   initialPlacePrompt,
-  incorrectPlacePrompt,
-  fallOffTablePrompt,
-  onTablePrompt
-} = require('./prompts')
+  incorrectPlacePrompt
+} = require('./IO')
 
 const {
   onTableCheck,
-  exitProgramCheck,
-  splitStringBySpace,
-  extractCoordsFacingFromPlaceCommand
+  inputAndSplitInputBySpace,
 } = require('./misc')
 
 const {
@@ -22,38 +18,31 @@ const {
 
 const toyRobot = async () => {
 
-  const inputInitialPlace = await initialPlacePrompt()
-  let splitInputInitialPlace = splitStringBySpace(inputInitialPlace)
-
   let coordsFacing = {}
+  let splitInputInitialPlace = ''
+
+  initialPlacePrompt()
       
   while (true) {
 
-    // exit program
-    if (exitProgramCheck(splitInputInitialPlace[0])) return
-
-    if (splitInputInitialPlace[0] !== 'PLACE' || splitInputInitialPlace[1] === undefined) {
-      let input2 = await incorrectPlacePrompt()
-      splitInputInitialPlace = splitStringBySpace(input2)
+    splitInputInitialPlace = await inputAndSplitInputBySpace()
+    
+    switch(splitInputInitialPlace[0]) {
+      case 'X':
+        return
+      case 'PLACE':
+        coordsFacing = await place(splitInputInitialPlace, coordsFacing)
+        break;
+      default:
+        incorrectPlacePrompt()
     }
 
-    if (splitInputInitialPlace[0] === 'PLACE' && splitInputInitialPlace[1] !== undefined) {
-      coordsFacing = await extractCoordsFacingFromPlaceCommand(splitInputInitialPlace[1])
-    }
-      
     if (onTableCheck(coordsFacing)) {
-      console.log('Toy Robot on table')
-      break
-    }
-
-    if (splitInputInitialPlace[0] === 'PLACE' && splitInputInitialPlace[1] !== undefined) {
-      let input = await fallOffTablePrompt()
-      splitInputInitialPlace = splitStringBySpace(input)
+      break;
     }
   }
 
-  const onTableInput = await onTablePrompt()
-  const onTableInputSplitBySpace = splitStringBySpace(onTableInput)
+  const onTableInputSplitBySpace = await inputAndSplitInputBySpace()
   main(onTableInputSplitBySpace, coordsFacing)
 }
 
@@ -83,8 +72,7 @@ const main = async (onTableInputSBS, coordsFacing) => {
         console.log('Command not recognised');
     }
 
-    let mainInput = await onTablePrompt()
-    onTableInputSBS = splitStringBySpace(mainInput)
+    onTableInputSBS = await inputAndSplitInputBySpace()
   }
 }
 

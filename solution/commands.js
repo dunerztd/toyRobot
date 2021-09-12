@@ -3,6 +3,13 @@ const {
   extractCoordsFacingFromPlaceCommand
 } = require('./misc')
 
+const {
+  moveToyOffTablePrompt,
+  placeIncorrectFormatPrompt,
+  placeToyFallOffTablePrompt,
+  toyOnTablePrompt
+} = require('./IO')
+
 const move = (coordsFacing) => {
 
   const coordsFacingOrig = {...coordsFacing}
@@ -26,7 +33,7 @@ const move = (coordsFacing) => {
   if (onTableCheck(coordsFacingMove)) {
     return coordsFacingMove
   } else {
-    console.log('Toy will fall off table. Move ignored');
+    moveToyOffTablePrompt()
     return coordsFacingOrig
   }
 }
@@ -82,17 +89,18 @@ const report = (coordsFacing) => {
 const place = async (onTableInputSBS, coordsFacing) => {
 
   if (onTableInputSBS[1] === undefined) {
-    console.log('Incorrect PLACE format');
+    placeIncorrectFormatPrompt()
     return coordsFacing
   }
 
   const coordsFacingNew = await extractCoordsFacingFromPlaceCommand(onTableInputSBS[1])
 
   if (!onTableCheck(coordsFacingNew)) {
-    console.log('Toy Robot will fall off table. Make sure coordinates within (0,0) and (5,5)');
+    placeToyFallOffTablePrompt()
     return coordsFacing
   }
 
+  toyOnTablePrompt()
   return coordsFacingNew
 }
 

@@ -1,3 +1,5 @@
+const { inputPrompt } = require('./IO')
+
 // checks if coordinates are within (0,0) and (5,5)
 const onTableCheck = (coordsFacing) => {
   if (-1 < coordsFacing.coordsX && coordsFacing.coordsX < 6) {
@@ -9,12 +11,6 @@ const onTableCheck = (coordsFacing) => {
   } else {
     return false
   }
-}
-
-// exit program check
-const exitProgramCheck = (userInput) => {
-  if (userInput === 'X') 
-  return true
 }
 
 const splitStringByCommas = (string) => {
@@ -44,11 +40,18 @@ const extractCoordsFacingFromPlaceCommand = async (splitInputSpace) => {
   return coordsFacing
 }
 
+const inputAndSplitInputBySpace = async () => {
+  const input = await inputPrompt()
+  const inputSBS = splitStringBySpace(input)
+  
+  return inputSBS
+}
+
 module.exports = {
   onTableCheck,
-  exitProgramCheck,
   splitStringByCommas,
   splitStringBySpace,
   createCoordsFacingObject,
-  extractCoordsFacingFromPlaceCommand
+  extractCoordsFacingFromPlaceCommand,
+  inputAndSplitInputBySpace
 }
